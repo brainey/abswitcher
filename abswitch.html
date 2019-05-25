@@ -1,0 +1,78 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="abswitch.css">
+  </head>
+  <body>
+    <div id="switch_box" class="box">
+      <div id="network" class="btn wide thin network_status">
+        Not Connected
+      </div>
+      <div id="switch_a" class="btn radio1">
+        A
+      </div>
+      <div id="switch_b" class="btn radio1">
+        B
+      </div>
+      <br>
+      <div id="switch_protopie" class="btn wide radio1">
+        ProtoPie
+      </div>
+      <br>
+      <div id="switch_dev_ui" class="btn wide radio1">
+        Dev UI
+      </div>
+      <div id="switch_launcher" class="btn wide radio1">
+        Launcher
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      $(document).ready(function() {
+        let last_button;
+        let socket = io('http://voicebox3.corp.lucid.lcl:3000');
+
+        socket.on('connect', function() {
+          let elem = $("#network")[0];
+          console.log('connected', socket.id);
+          elem.innerHTML = "Connected";
+          elem.classList.add("connected");
+
+          $(".radio1").click(function() {
+            if (last_button) {
+              last_button.classList.toggle('highlight');
+            }
+            last_button = this;
+            this.classList.toggle('highlight');
+            let event = this.id.match(/switch_(.*)/)[1];
+            console.log('run ' + this.id, event);
+            socket.emit('switch', event);
+          });
+          socket.on('disconnect', function() {
+            let elem = $("#network")[0];
+            console.log('got disconnected');
+            elem.innerHTML = 'Disconnected';
+            elem.classList.remove('connected');
+          });
+        });
+        // $("#network").click(function() {
+        //   if (this.classList.contains('connected')) {
+        //     this.classList.toggle('connected');
+        //     this.innerHTML = "Not Connected";
+        //   } else {
+        //     this.innerHTML = "Connected";
+        //     this.classList.toggle('connected');
+        //   }
+        //   console.log('network state: ' + this.innerHTML);
+        // });
+      })
+      // $(function () {
+      //   var socket = io('http://voicebox3.corp.lucid.lcl:3000');
+      //   socket.on('chat message', function(msg){
+      //     $('#messages').append($('<li>').text(msg));
+      //     });
+      //   });
+      </script>
+  </body>
+</html>
