@@ -2,10 +2,13 @@ const express = require('express');
 var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
+var path = require('path');
 
 app.get('/', function(req, res){
-  res.sendFile(__dirname + '/abswitch.html');
+  res.sendFile(path.join(__dirname, '/index.html'));
 });
+
+app.use(express.static(path.join(__dirname, '/public')));
 
 io.on('connection', function(socket){
   socket.on('switch', function(msg){

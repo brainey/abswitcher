@@ -1,6 +1,8 @@
 <!doctype html>
 <html>
   <head>
+    <title>AB Switcher</title>
+    <link rel="shortcut icon" href="https://lucidmotors.com/sites/default/files/favicon.ico" type="image/vnd.microsoft.icon" />
     <link rel="stylesheet" type="text/css" href="abswitch.css">
   </head>
   <body>
@@ -31,7 +33,7 @@
     <script>
       $(document).ready(function() {
         let last_button;
-        let socket = io('http://voicebox3.corp.lucid.lcl:3000');
+        let socket = io(document.location.origin);
 
         socket.on('connect', function() {
           let elem = $("#network")[0];
