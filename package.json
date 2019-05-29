@@ -4,6 +4,7 @@
   "description": "First socket.io client to listen for keyboard events",
   "dependencies": {
     "express": "^4.15.2",
+    "path": "^0.12.7",
     "socket.io": "^2.2.0",
     "socket.io-client": "^2.2.0"
   }
