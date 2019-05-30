@@ -1,6 +1,6 @@
 .box {
   background-color: #333;
-  width: 256px;
+  width: 100%;
 }
 
 .btn {
@@ -11,18 +11,18 @@
   font-weight: normal;
   font-size:  40px;
   font-family: Arial, Helvetica, sans-serif;
-  width: 30px;
+  width: 43%;
   cursor: pointer;
 
   /* create a small space when buttons wrap on 2 lines */
-  margin: 5px 5px;
+  margin: 2% 2%;
 
   /* invisible border (will be colored on hover/focus) */
-  border: solid 1px transparent;
+  border: solid 0.5% transparent;
   border-radius: 5px;
 
   /* size comes from text & padding (no width/height) */
-  padding: 0.5em 1em;
+  padding: 1% 1%;
 
   /* make sure colors have enough contrast! */
   color: #ffffff;
@@ -33,12 +33,12 @@
 .thin {
   font-size: 14px;
   height: 20px;
-  width: 160px;
-  padding: 3px 40px;
+  width: 93%;
+  /* padding: 3px 40px; */
 }
 
 .wide {
-  width: 160px;
+  width: 93%;
 }
 
 .network_status {

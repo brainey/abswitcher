@@ -10,30 +10,28 @@
       <div id="network" class="btn wide thin network_status">
         Not Connected
       </div>
-      <div id="switch_a" class="btn radio1">
-        A
-      </div>
-      <div id="switch_b" class="btn radio1">
-        B
-      </div>
+      <div id="switch_a" class="btn radio1">A</div>
+      <div id="switch_b" class="btn radio1">B</div>
       <br>
-      <div id="switch_protopie" class="btn wide radio1">
-        ProtoPie
-      </div>
+      <div id="switch_protopie" class="btn wide radio1">ProtoPie</div>
       <br>
-      <div id="switch_dev_ui" class="btn wide radio1">
-        Dev UI
-      </div>
-      <div id="switch_launcher" class="btn wide radio1">
-        Launcher
-      </div>
+      <div id="switch_dev_ui" class="btn wide radio1">Dev UI</div>
+      <div id="switch_launcher" class="btn wide radio1">Launcher</div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
     <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
+      let default_site = 'http://voicebox3.corp.lucid.lcl:3000';
       $(document).ready(function() {
         let last_button;
-        let socket = io(document.location.origin);
+        let site;
+        const valid_protocols = ['http', 'https'];
+        if (valid_protocols.includes(document.location.protocol)) {
+          site = document.location.origin;
+        } else {
+          site = default_site;
+        }
+        let socket = io(site);
 
         socket.on('connect', function() {
           let elem = $("#network")[0];
