@@ -47,7 +47,7 @@
             this.classList.toggle('highlight');
             let event = this.id.match(/switch_(.*)/)[1];
             console.log('run ' + this.id, event);
-            socket.emit('switch', event);
+            socket.emit('switchui', event);
           });
           socket.on('disconnect', function() {
             let elem = $("#network")[0];
