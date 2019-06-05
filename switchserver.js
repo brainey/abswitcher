@@ -11,8 +11,8 @@ app.get('/', function(req, res){
 app.use(express.static(path.join(__dirname, '/public')));
 
 io.on('connection', function(socket){
-  socket.on('switch', function(msg){
-    io.emit('switch', msg);
+  socket.on('switchui', function(msg){
+    io.emit('switchui', msg);
   });
 });
 
