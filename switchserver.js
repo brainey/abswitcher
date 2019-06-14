@@ -4,6 +4,9 @@ var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 var path = require('path');
 
+
+var clients = {};
+
 app.get('/', function(req, res){
   res.sendFile(path.join(__dirname, '/index.html'));
 });
@@ -11,8 +14,19 @@ app.get('/', function(req, res){
 app.use(express.static(path.join(__dirname, '/public')));
 
 io.on('connection', function(socket){
+  clients[socket.id] = socket;
+
+  console.log('a user connected: ', socket.id);
+  console.log('number of clients: ', Object.keys(clients).length)
+
   socket.on('switchui', function(msg){
     io.emit('switchui', msg);
+  });
+
+  socket.on('disconnect', function(data) {
+    console.log('socket disconnecting: ', socket.id);
+    delete clients[socket.id];
+    console.log('number of clients: ', Object.keys(clients).length)
   });
 });
 
