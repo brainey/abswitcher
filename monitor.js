@@ -1,6 +1,8 @@
 const io = require('socket.io-client');
+//const broker = 'http://voicebox3.corp.lucid.lcl:3000';
+const broker = 'http://10.100.11.36:3000';
 
-var socket = io('http://10.100.11.206:3000');
+var socket = io(broker);
 
 var connections = {};
 
