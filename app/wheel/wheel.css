@@ -16,6 +16,29 @@
   left: 0;
 }
 
-.img-overlay-wrap:hover {
-  transform: rotate( 15deg );
+.BTN {
+/*    visibility: hidden;
+/*    opacity: 0;
+/*    transition: visibility 0s linear 300ms, opacity 300ms;*/
 }
+
+.highlight: {
+    opacity: 0.25;
+}
+
+/*
+.BTN:hover {
+    visibility: visible;
+    opacity: 1;
+    transition: visibility 0s linear 0ms, opacity 300ms;
+}
+*/
+/*
+.img-overlay-wrap > svg > rect:hover {
+    visibility: visible;
+}
+
+#syno-nsc-ext-gen3 > div.img-overlay-wrap > svg > rect.BTN*/
+/*.img-overlay-wrap:hover {
+  transform: rotate( 15deg );
+}*/
