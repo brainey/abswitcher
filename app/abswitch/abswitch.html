@@ -29,7 +29,7 @@
       $(document).ready(function() {
         let last_button;
         let site;
-        const valid_protocols = ['http', 'https'];
+        const valid_protocols = ['http:', 'https:'];
         if (valid_protocols.includes(document.location.protocol)) {
           site = document.location.origin;
         } else {
