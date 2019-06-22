@@ -1,6 +1,7 @@
 const io = require('socket.io-client');
 //const broker = 'http://voicebox3.corp.lucid.lcl:3000';
-const broker = 'http://10.100.11.36:3000';
+const broker = 'http://127.0.0.1:3000';
+//const broker = 'http://10.100.11.36:3000';
 
 var socket = io(broker);
 
@@ -19,6 +20,10 @@ socket.on('connect', () => {
 
   socket.on('switchui', (mode) => {
     console.log('Change mode to ', mode);
+  });
+
+  socket.on('controls', (mode) => {
+    console.log('controls change ', mode);
   });
 
 });

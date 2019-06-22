@@ -20,7 +20,13 @@ io.on('connection', function(socket){
   console.log('number of clients: ', Object.keys(clients).length)
 
   socket.on('switchui', function(msg){
+    console.log('switchui', msg);
     io.emit('switchui', msg);
+  });
+
+  socket.on('controls', function(msg){
+    console.log('controls', msg);
+    io.emit('controls', msg);
   });
 
   socket.on('disconnect', function(data) {

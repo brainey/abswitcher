@@ -41,6 +41,49 @@
         }
       };
       
+      let default_site = 'http://voicebox3.corp.lucid.lcl:3000';
+      // let default_site = 'http://10.100.11.36:3000';
+      $(document).ready(function() {
+        let last_button;
+        let site;
+        const valid_protocols = ['http:', 'https:'];
+        if (valid_protocols.includes(document.location.protocol)) {
+          site = document.location.origin;
+        } else {
+          site = default_site;
+        }
+        let socket = io(site);
+        let connections = {};
+
+        socket.on('connect', function() {
+          connections[socket.id] = socket;
+          let elem = $("#network")[0];
+          console.log('connected: ', socket.id);
+          elem.innerHTML = "Connected";
+          elem.classList.add("connected");
+
+          $(".radio1").click(function() {
+            if (last_button) {
+              last_button.classList.toggle('highlight');
+            }
+            last_button = this;
+            this.classList.toggle('highlight');
+            let event = this.id.match(/switch_(.*)/)[1];
+            console.log('run ' + this.id, event);
+            socket.emit('switchui', event);
+          });
+          socket.on('disconnect', function() {
+            delete connections[socket.id];
+            let elem = $("#network")[0];
+            console.log('got disconnected');
+            elem.innerHTML = 'Disconnected';
+            elem.classList.remove('connected');
+          });
+        });
+        socket.on('error', function(err) {
+          console.log('connection error: ', err);
+        });
+      })
     </script>
   </head>
   <body onload="initialize()">
