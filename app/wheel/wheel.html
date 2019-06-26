@@ -17,33 +17,95 @@
         opacity: 0.70;
       }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.dev.js"></script>
     <script>
+      let default_site = 'http://voicebox3.corp.lucid.lcl:3000';
+      // let default_site = 'http://10.100.11.36:3000';
       let button_elements;
       let buttonSelect;
-      let initialize = () => {
-	  // set up selector
-	  buttonSelect = document.getElementById('buttonSelect');
+      let scroll_wheels = ['left_scroll', 'right_scroll'];
 
-          // populate select options with button ids
-	  button_elements = document.getElementsByClassName("btn");
-	  for (let idx = 0; idx < button_elements.length; idx++) {
-	      var btn = new Option(button_elements[idx].id, idx);
-	      buttonSelect.options.add(btn);
-	  }
+      let initialize = () => {
+        // set up selector
+        buttonSelect = document.getElementById('buttonSelect');
+
+        // populate select options with button ids
+        button_elements = document.getElementsByClassName("btn");
+        for (let idx = 0; idx < button_elements.length; idx++) {
+          var btn = new Option(button_elements[idx].id, idx);
+          buttonSelect.options.add(btn);
+        }
+
+	// hand socket io connection
+        let last_button;
+        let site;
+        const valid_protocols = ['http:', 'https:'];
+
+        if (valid_protocols.includes(document.location.protocol)) {
+          site = document.location.origin;
+        } else {
+          site = default_site;
+        }
+        let socket = io(site);
+        let connections = {};
+
+        socket.on('connect', function() {
+          connections[socket.id] = socket;
+          let elem = document.getElementById("network");
+          console.log('connected: ', socket.id);
+          elem.innerHTML = "Connected";
+          elem.classList.add("connected");
+
+	    socket.on('controls', (data) => {
+	      let control = data.name;
+	      let state = data.value;
+	      if (scroll_wheels.includes(control)) {
+                let controls = [];
+                if (state >= 0) {
+                  controls.push(control+'_up');
+                }
+                if (state <= 0) {
+		      controls.push(control+'_down');
+		}
+		controls.forEach((control, idx) => {
+		  toggle(document.getElementById(control), state);
+		});
+	      } else {
+		toggle(document.getElementById(control), state);
+              }
+	  });
+	      
+          socket.on('disconnect', function() {
+            delete connections[socket.id];
+            let elem = document.getElementById("network");
+            console.log('got disconnected');
+            elem.innerHTML = 'Disconnected';
+            elem.classList.remove('connected');
+          });
+        });
+        socket.on('error', function(err) {
+          console.log('connection error: ', err);
+        });
       };
 
-      let toggle = (idx) => {
-        let elem = button_elements[idx];
-        if (elem.style.visibility === 'hidden') {
-          elem.style.visibility = 'visible';
-        } else {
-          elem.style.visibility = 'hidden'
+      let toggle = (elem, state) => {
+        if (elem) {
+          if (typeof state === 'undefined') {
+            state = elem.style.visibility === 'hidden';
+          }
+          if (state) {
+            elem.style.visibility = 'visible';
+          } else {
+            elem.style.visibility = 'hidden'
+          }
         }
       };
-      
-    </script>
+     </script>
   </head>
   <body onload="initialize()">
+    <div id="network" class="network_status">
+      Not Connected
+    </div>
     <div class="img-overlay-wrap">
       <img src="steering-wheel.png">
       <svg viewBox="0 0 400 400">
@@ -59,25 +121,25 @@
 	<polygon id="right_scroll_select" class="btn" points="355,200 355,205 365,205 365,210 375,200 365,190 365,195 355,195 355,200" style="fill:green;stroke:green;stroke-width:1"/>
 	<rect id="right_down" class="btn" x="305" y="205" width="33" height="8" fill="green"/>
 	<polygon id="right_scroll_down" class="btn" points="350,210 355,210 355,220 360,220 350,230 340,220 345,220 345,210 350,210" style="fill:green;stroke:green;stroke-width:1"/>
-	<rect id="left_btn3_hl" class="btn hl" x="49" y="236" width="12" height="12" fill="yellow"/>
-	<rect id="left_btn3" class="btn" x="50" y="237" width="10" height="10" fill="green"/>
-	<rect id="left_btn2_hl" class="btn hl" x="69" y="236" width="12" height="12" fill="yellow"/>
-	<rect id="left_btn2" class="btn" x="70" y="237" width="10" height="10" fill="green"/>
-	<rect id="left_btn1_h1" class="btn hl" x="89" y="246" width="12" height="12" fill="yellow"/>
-	<rect id="left_btn1" class="btn" x="90" y="247" width="10" height="10" fill="green"/>
-	<rect id="right_btn1_hl" class="btn hl" x="291" y="246" width="12" height="12" fill="yellow"/>
-	<rect id="right_btn1" class="btn" x="292" y="247" width="10" height="10" fill="green"/>
-	<rect id="right_btn2_hl" class="btn hl" x="311" y="236" width="12" height="12" fill="yellow"/>
-	<rect id="right_btn2" class="btn" x="312" y="237" width="10" height="10" fill="green"/>
-	<rect id="right_btn3_hl" class="btn hl" x="331" y="236" width="12" height="12" fill="yellow"/>
-	<rect id="right_btn3" class="btn" x="332" y="237" width="10" height="10" fill="green"/>
+	<rect id="left_outer_hover" class="btn hl" x="49" y="236" width="12" height="12" fill="yellow"/>
+	<rect id="left_outer" class="btn" x="50" y="237" width="10" height="10" fill="green"/>
+	<rect id="left_middle_hover" class="btn hl" x="69" y="236" width="12" height="12" fill="yellow"/>
+	<rect id="left_middle" class="btn" x="70" y="237" width="10" height="10" fill="green"/>
+	<rect id="left_inner_hover" class="btn hl" x="89" y="246" width="12" height="12" fill="yellow"/>
+	<rect id="left_inner" class="btn" x="90" y="247" width="10" height="10" fill="green"/>
+	<rect id="right_inner_hover" class="btn hl" x="291" y="246" width="12" height="12" fill="yellow"/>
+	<rect id="right_inner" class="btn" x="292" y="247" width="10" height="10" fill="green"/>
+	<rect id="right_middle_hover" class="btn hl" x="311" y="236" width="12" height="12" fill="yellow"/>
+	<rect id="right_middle" class="btn" x="312" y="237" width="10" height="10" fill="green"/>
+	<rect id="right_outer_hover" class="btn hl" x="331" y="236" width="12" height="12" fill="yellow"/>
+	<rect id="right_outer" class="btn" x="332" y="237" width="10" height="10" fill="green"/>
       </svg>
     </div>
     <div>
     </div>
     <br/>
     <div>
-      <button type="button" class="button" onclick="toggle(buttonSelect.selectedIndex)">Show / Hide Button</button>
+      <button type="button" class="button" onclick="toggle(button_elements[buttonSelect.selectedIndex])">Show / Hide Button</button>
     </div>
     <div>
       <select id="buttonSelect"></select>
