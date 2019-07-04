@@ -22,35 +22,32 @@ patch(socket);
 var connections = {};
 
 socket.on('connect', () => {
-  var id = socket.id;
+    var id = socket.id;
 
-  console.log('Connected: ', id, socket.connected);
-  connections[id] = socket;
+    console.log('Connected: ', id, socket.connected);
+    connections[id] = socket;
 
-  socket.on('disconnect', () => {
-    console.log('Disconnected: ', id, socket.disconnected);
-    delete connections[id];
-  });
+    socket.on('disconnect', () => {
+        console.log('Disconnected: ', id, socket.disconnected);
+        delete connections[id];
+    });
 
-  socket.on('ping', () => {
-    console.log('Ping message sent ...');
-  });
-  socket.on('pong', (ms) => {
-    console.log('Pong response in ',ms,'ms');
-  });
-  socket.on('pcs-web-players', (x) => {
-    console.log('pcs-web-players: ', x);
-  });
-  socket.on('switchui', (mode) => {
-    console.log('Change mode to ', mode);
-  });
+    // socket.on('ping', () => {
+    //     console.log('Ping message sent ...');
+    // });
+    // socket.on('pong', (ms) => {
+    //     console.log('Pong response in ',ms,'ms');
+    // });
 
-  socket.on('controls', (mode) => {
-    console.log('controls change ', mode);
-  });
+    // socket.on('switchui', (mode) => {
+    //     console.log('Change mode to ', mode);
+    // });
 
-  socket.on('*', (packet) => {
-    console.log('wildcard: ', packet);
-  });
+    // socket.on('controls', (mode) => {
+    //     console.log('controls change ', mode);
+    // });
+
+    socket.on('*', (packet) => {
+        console.log('wildcard: ', packet);
+    });
 });
-
